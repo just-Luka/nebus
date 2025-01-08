@@ -14,9 +14,18 @@ return new class extends Migration
         Schema::create('buildings', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('address', 255);
+            $table->string('address_line', 150);
+            $table->string('city', 150);
+            $table->string('country', 150);
             $table->decimal('latitude', 10, 7);
             $table->decimal('longitude', 10, 7);
+        });
+
+        Schema::table('organisations', function (Blueprint $table) {
+            $table->foreign('building_id')
+                ->references('id')
+                ->on('buildings')
+                ->onDelete('cascade');
         });
     }
 
@@ -25,6 +34,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('organisations', function (Blueprint $table) {
+            $table->dropForeign(['building_id']);
+        });
+
         Schema::dropIfExists('buildings');
     }
 };

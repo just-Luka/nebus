@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name', 150);
-            $table->string('phone', 15)->unique();
+            $table->jsonb('phone');
             $table->unsignedBigInteger('building_id');
         });
     }
