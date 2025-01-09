@@ -18,8 +18,11 @@ final class Organisation extends Model
         'building_id' => 'integer',
     ];
 
+    /**
+     * @return BelongsToMany
+     */
     public function operations(): BelongsToMany
     {
-        return $this->belongsToMany(Operation::class);
+        return $this->belongsToMany(Operation::class, 'organisation_operation',  'organisation_id', 'operation_id');
     }
 }

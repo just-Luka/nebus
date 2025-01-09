@@ -14,8 +14,19 @@ final class Operation extends Model
         'parent_id' => 'integer',
     ];
 
+    /**
+     * @return BelongsToMany
+     */
     public function organisations(): BelongsToMany
     {
-        return $this->belongsToMany(Organisation::class);
+        return $this->belongsToMany(Organisation::class, 'organisation_operation', 'operation_id', 'organisation_id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function children(): BelongsToMany
+    {
+        return $this->belongsToMany(self::class, 'parent_operation', 'operation_id', 'parent_id');
     }
 }
