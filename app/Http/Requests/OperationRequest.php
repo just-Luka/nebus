@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
-final class OrganisationRequest extends FormRequest
+final class OperationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,14 +19,15 @@ final class OrganisationRequest extends FormRequest
     }
 
     /**
+     * Get the validation rules that apply to the request.
+     *
      * @return array<string, string>
      */
     public function rules(): array
     {
         return [
-            'building_id' => 'integer|exists:buildings,id',
-            'operation_id' => 'integer|exists:operations,id',
-            'organisation_name' => 'string|nullable',
+            # Поскольку root_operation_name будет напрямую ставится в sql запросе, regex выражение обеспечивает защиту от sql инекции
+            'root_operation_name' => 'required|string|nullable|regex:/^[\p{L}\p{N}_]+$/u',
         ];
     }
 
@@ -36,10 +37,7 @@ final class OrganisationRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'building_id.integer' => 'ID здания должен быть целым числом.',
-            'building_id.exists' => 'Выбранный ID здания не существует.',
-            'operation_id.integer' => 'ID деятельности должен быть целым числом.',
-            'operation_id.exists' => 'Выбранный ID деятельности не существует.'
+            'root_operation_name.required' => 'Пожалуйста, укажите название деятельности',
         ];
     }
 

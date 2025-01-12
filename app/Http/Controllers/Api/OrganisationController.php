@@ -11,7 +11,6 @@ use Illuminate\Http\JsonResponse;
 
 final class OrganisationController extends Controller
 {
-
     public function index(OrganisationRequest $request): JsonResponse
     {
         $params = $request->validated();
@@ -29,8 +28,9 @@ final class OrganisationController extends Controller
             });
         }
 
-        if (isset($params['operation_name'])) {
-            ### пойск по названию
+        # 6. поиск организации по названию
+        if (isset($params['organisation_name'])) {
+            $data->where('name', 'ilike', '%' . $params['organisation_name'] . '%' );
         }
 
         return response()->json($data->get());
