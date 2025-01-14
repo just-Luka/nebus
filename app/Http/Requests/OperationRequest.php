@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\ValidationException;
-
-final class OperationRequest extends FormRequest
+final class OperationRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -39,17 +35,5 @@ final class OperationRequest extends FormRequest
         return [
             'root_operation_name.required' => 'Пожалуйста, укажите название деятельности',
         ];
-    }
-
-    /**
-     * @param Validator $validator
-     * @throws ValidationException
-     */
-    protected function failedValidation(Validator $validator): void
-    {
-        throw new ValidationException(
-            $validator,
-            response()->json($validator->errors(), 422)
-        );
     }
 }

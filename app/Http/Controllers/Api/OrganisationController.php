@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\DTO\OrganisationDTO;
 use App\Http\Requests\OrganisationRequest;
 use App\Models\Organisation;
 use Illuminate\Http\JsonResponse;
@@ -33,19 +34,29 @@ final class OrganisationController extends Controller
             $data->where('name', 'ilike', '%' . $params['organisation_name'] . '%' );
         }
 
-        return response()->json($data->get());
+        return response()->json([
+            'status' => true,
+            'message' => 'Успешно!',
+            'data' => OrganisationDTO::fromPagination($data->paginate(15))
+        ]);
     }
 
     public function show(int $id): JsonResponse
     {
         # 4. вывод информации об организации по её идентификатору
         $data = Organisation::find($id);
-
-        return $data
-            ? response()->json($data)
-            : response()->json([
+        if (is_null($data)) {
+            return response()->json([
                 'status' => false,
-                'message' => 'Организация не существует.'
+                'message' => 'Организация не существует.',
+                'data' => []
             ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Организация найдена.',
+            'data' => OrganisationDTO::fromSingle($data),
+        ]);
     }
 }

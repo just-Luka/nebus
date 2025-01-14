@@ -15,9 +15,11 @@ final class OperationController extends Controller
     {
         $params = $request->validated();
 
-        return response()->json(
+        return response()->json([
+            'status' => true,
+            'message' => 'Успешно!',
             # 5. искать организации по виду деятельности
-            Operation::getOrganisationHierarchy($params['root_operation_name']),
-        );
+            'data' => Operation::getOrganisationHierarchy($params['root_operation_name']),
+        ]);
     }
 }
